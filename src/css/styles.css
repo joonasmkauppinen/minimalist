@@ -19,7 +19,7 @@ body {
 	cursor: pointer;
 }
 
-.main-wrapper {
+.content {
 	margin: 0 auto;
 	max-width: 360px;
 }
@@ -32,7 +32,7 @@ body {
 	font-size: 72px;
 	color: var(--color-title);
 }
-.title > span {
+.title__highlight {
 	font-weight: 300;
 }
 
@@ -58,7 +58,7 @@ body {
 	box-sizing: border-box;
 	box-shadow: 0 19px 36px -5px rgba(111, 96, 72, .09);
 }
-.card *:nth-child(2) {
+.card > *:nth-child(2) {
 	margin-left: 16px !important;
 }
 
@@ -72,10 +72,48 @@ body {
 	margin: 16px 0;
 }
 
-.list-p {
+.card__checkmark {
+	position: relative;
+	width: 16px;
+	height: 16px;
+}
+.card__checkmark-ring {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: scale(1, 1);
+	opacity: 1;
+	transition:
+		transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card__checkmark-ring--hidden {
+	transform: scale(1.8, 1.8);
+	opacity: 0;
+}
+.card__checkmark-check {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform:
+		scale(1, 1)
+		rotateZ(0deg);
+	opacity: 1;
+	transition:
+		transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card__checkmark-check--hidden {
+	transform:
+		scale(0, 0)
+		rotateZ(180deg);
+	opacity: 0;
+}
+
+.card__p {
 	position: relative;
 }
-.list-p::after {
+.card__p::after {
 	content: '';
 	position: absolute;
 	top: 50%;
@@ -85,13 +123,13 @@ body {
 	background-color: var(--color-font-normal);
 	transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.list-p:hover::after {
-	width: 20px;
+.card__p--hover::after {
+	width: 20px !important;
 }
-.list-p-checked {
+.card__p--checked {
 	color: var(--color-item-checked) !important;
 }
-.list-p-checked::after {
+.card__p--checked::after {
 	width: 100% !important;
 	background-color: var(--color-item-checked) !important;
 }
