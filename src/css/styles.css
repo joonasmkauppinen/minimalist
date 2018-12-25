@@ -48,6 +48,7 @@ body {
 
 
 .card {
+	position: relative;
 	display: flex;
 	align-items: baseline;
 	width: 100%;
@@ -132,4 +133,15 @@ body {
 .card__p--checked::after {
 	width: 100% !important;
 	background-color: var(--color-item-checked) !important;
+}
+
+.card__actions {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	top: calc(50% - 22.5px);
+	left: -88px;
+}
+.card__actions-arrow {
+	margin-right: 16px;
 }

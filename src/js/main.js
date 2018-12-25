@@ -6,17 +6,20 @@ const todoList = document.getElementById('list')
 const input = document.getElementById('new-list-item')
 
 const addNewTodo = (value) => {
-	const li              = document.createElement('li')
-	const checkmark       = document.createElement('span')
-	const checkmarkRing   = document.createElement('img')
-	const checkmarkCheck  = document.createElement('img')
-	const p               = document.createElement('p')
+	const cardActions       = document.createElement('span')
+	const cardActionsArrow  = document.createElement('img')
+	const cardActionsAction = document.createElement('img')
+	const checkmark         = document.createElement('span')
+	const checkmarkRing     = document.createElement('img')
+	const checkmarkCheck    = document.createElement('img')
+	const p                 = document.createElement('p')
+	const li                = document.createElement('li')
 
 	checkmarkRing.setAttribute('src', './src/svg/circle_ic.svg')
-	checkmarkRing.classList.add('card__checkmark-ring')
+	checkmarkRing.classList.add('card__checkmark-ring', 'checkable')
 
 	checkmarkCheck.setAttribute('src', './src/svg/checkmark_ic.svg')
-	checkmarkCheck.classList.add('card__checkmark-check' ,'card__checkmark-check--hidden')
+	checkmarkCheck.classList.add('card__checkmark-check' ,'card__checkmark-check--hidden', 'checkable')
 
 	checkmark.appendChild(checkmarkRing)
 	checkmark.appendChild(checkmarkCheck)
@@ -25,16 +28,24 @@ const addNewTodo = (value) => {
 	li.appendChild(checkmark)
 
 	p.innerText = value
-	p.classList.add('clickable')
-	p.classList.add('card__p')
+	p.classList.add('card__p', 'clickable', 'checkable')
 	li.appendChild(p)
+
+	cardActionsArrow.setAttribute('src', './src/svg/item_actions_ic.svg')
+	cardActionsArrow.classList.add('card__actions-arrow')
+	cardActionsAction.setAttribute('src', './src/img/edit_ic.png')
+	cardActionsAction.classList.add('clickable')
+	cardActions.classList.add('card__actions')
+	cardActions.appendChild(cardActionsArrow)
+	cardActions.appendChild(cardActionsAction)
+	li.appendChild(cardActions)
 
 	li.classList.add('card')
 
 	const checkTarget = (event) => {
 		return new Promise(resolve => {
-			const tag = event.target.tagName
-			if (tag === "P" || tag === "IMG") {
+			const isCheckable = event.target.classList.contains('checkable')
+			if (isCheckable) {
 				resolve(true)
 			} else {
 				resolve(false)
