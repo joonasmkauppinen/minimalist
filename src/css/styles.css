@@ -145,3 +145,42 @@ body {
 .card__actions-arrow {
 	margin-right: 16px;
 }
+.card__action {
+	position: relative;
+	width: 45px;
+	height: 45px;
+}
+.card__actions-edit {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: rotateZ(0deg);
+	transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card__actions-edit--hidden {
+	transform: rotateZ(-180deg);
+}
+.card__actions-save {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: rotateZ(0deg);
+	opacity: 1;
+	transition:
+		transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card__actions-save--hidden {
+	transform: rotateZ(180deg);
+	opacity: 0;
+}
+.card__actions-delete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 1;
+	transition: opacity 200ms ease-in-out;
+}
+.card__actions-delete--hidden {
+	opacity: 0;
+}

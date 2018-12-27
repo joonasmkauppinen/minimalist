@@ -8,10 +8,15 @@ const input = document.getElementById('new-list-item')
 const addNewTodo = (value) => {
 	const cardActions       = document.createElement('span')
 	const cardActionsArrow  = document.createElement('img')
-	const cardActionsAction = document.createElement('img')
+	const cardActionsAction = document.createElement('span')
+	const cardActionEdit    = document.createElement('img')
+	const cardActionSave    = document.createElement('img')
+	const cardActionDelete  = document.createElement('img')
+
 	const checkmark         = document.createElement('span')
 	const checkmarkRing     = document.createElement('img')
 	const checkmarkCheck    = document.createElement('img')
+
 	const p                 = document.createElement('p')
 	const li                = document.createElement('li')
 
@@ -34,31 +39,42 @@ const addNewTodo = (value) => {
 	cardActionsArrow.setAttribute('src', './src/svg/item_actions_ic.svg')
 	cardActionsArrow.classList.add('card__actions-arrow')
 
-	cardActionsAction.setAttribute('src', './src/img/edit_ic.png')
-	cardActionsAction.classList.add('clickable')
-	cardActionsAction.addEventListener('click', e => {
+	cardActionEdit.setAttribute('src', './src/img/edit_ic.png')
+	cardActionEdit.classList.add('card__actions-edit', 'clickable')
+	cardActionSave.setAttribute('src', './src/img/save_ic.png')
+	cardActionSave.classList.add('card__actions-save','card__actions-save--hidden', 'clickable')
+	cardActionDelete.setAttribute('src', './src/img/delete_ic.png')
+	cardActionDelete.classList.add('card__actions-delete', 'card__actions-delete--hidden', 'clickable')
 
+	cardActionsAction.classList.add('card__action')
+	cardActionsAction.appendChild(cardActionEdit)
+	cardActionsAction.appendChild(cardActionSave)
+	cardActionsAction.appendChild(cardActionDelete)
+
+	cardActionsAction.addEventListener('click', e => {
 		const parent = e.target.closest('li')
 		const todoValue = parent.children[1]
 		const index = Array.prototype.indexOf.call(todoList.childNodes, parent) - 1
 
 		if (todoItems[index].checked) {
-			li.removeEventListener('click', () => {})
-			todoList.removeChild(li);
+			todoList.removeChild(li)
 			todoItems.splice(index, 1)
 			return
 		}
 
 		if (todoItems[index].editable) {
-			cardActionsAction.setAttribute('src', './src/img/edit_ic.png')
+			cardActionSave.classList.toggle('card__actions-save--hidden')
+			cardActionEdit.classList.toggle('card__actions-edit--hidden')
 			todoItems[index].editable = false
 			todoValue.contentEditable = false
 		} else {
-			cardActionsAction.setAttribute('src', './src/img/save_ic.png')
+			cardActionEdit.classList.toggle('card__actions-edit--hidden')
+			cardActionSave.classList.toggle('card__actions-save--hidden')
 			todoItems[index].editable = true
 			todoValue.contentEditable = true
 			todoValue.focus()
 		}
+
 	})
 
 	cardActions.classList.add('card__actions')
@@ -107,10 +123,10 @@ const addNewTodo = (value) => {
 				const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
 				if (!todoItems[index].checked) {
 					todoItems[index].checked = true
-					cardActionsAction.setAttribute('src', './src/img/delete_ic.png')
+					cardActionDelete.classList.remove('card__actions-delete--hidden')
 				} else {
 					todoItems[index].checked = false
-					cardActionsAction.setAttribute('src', './src/img/edit_ic.png')
+					cardActionDelete.classList.add('card__actions-delete--hidden')
 				}
 			}
 		})
