@@ -61,6 +61,7 @@ body {
 }
 .card > *:nth-child(2) {
 	margin-left: 16px !important;
+	width: 100%;
 }
 
 .todo-items__list {
@@ -112,27 +113,33 @@ body {
 }
 
 .card__p {
-	position: relative;
+	background-image:
+		linear-gradient(
+			transparent 50%,
+			var(--color-font-normal) 50%,
+			var(--color-font-normal) 60%,
+			transparent 60%
+		);
+	background-size: 0% 100%;
+	background-repeat: no-repeat;
+	transition:
+		background-size 300ms cubic-bezier(0.4, 0, 0.2, 1),
+		background-image 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.card__p::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 0;
-	width: 0%;
-	height: 2px;
-	background-color: var(--color-font-normal);
-	transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.card__p--hover::after {
-	width: 20px !important;
+
+.card__p--hover {
+	background-size: 15px 100%;
 }
 .card__p--checked {
 	color: var(--color-item-checked) !important;
-}
-.card__p--checked::after {
-	width: 100% !important;
-	background-color: var(--color-item-checked) !important;
+	background-size: 100% 100%;
+	background-image:
+		linear-gradient(
+			transparent 50%,
+			var(--color-item-checked) 50%,
+			var(--color-item-checked) 60%,
+			transparent 60%
+		);
 }
 
 .card__actions {
@@ -140,17 +147,47 @@ body {
 	display: flex;
 	align-items: center;
 	top: calc(50% - 22.5px);
-	left: -88px;
+	left: -72px;
+	overflow: hidden;
 }
 .card__actions-arrow {
-	margin-right: 16px;
-}
-.card__action {
 	position: relative;
+	margin-right: 16px;
+	left: 45px;
+	opacity: 1;
+	transition:
+		left 250ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card__actions-arrow--hidden {
+	left: 72px;
+	opacity: 0;
+}
+.card__actions-arrow--hover {
+	left: 0;
+	opacity: 0;
+}
+
+.card__action {
 	width: 45px;
 	height: 45px;
+	position: relative;
+	left: -16px;
+	opacity: 1;
+	transition:
+		left 300ms cubic-bezier(0.4, 0, 0.2, 1),
+		transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
+.card__action--hidden {
+	left: 45px;
+	opacity: 0;
+	transform: scale(0.2,0.2);
+}
+
 .card__actions-edit {
+	width: 45px;
+	height: 45px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -161,6 +198,8 @@ body {
 	transform: rotateZ(-180deg);
 }
 .card__actions-save {
+	width: 45px;
+	height: 45px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -175,6 +214,8 @@ body {
 	opacity: 0;
 }
 .card__actions-delete {
+	width: 45px;
+	height: 45px;
 	position: absolute;
 	top: 0;
 	left: 0;

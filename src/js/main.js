@@ -4,6 +4,7 @@ const todoItems = []
 
 const todoList = document.getElementById('list')
 const input = document.getElementById('new-list-item')
+let   isEditingTodo = false
 
 const addNewTodo = (value) => {
 	const cardActions       = document.createElement('span')
@@ -18,6 +19,7 @@ const addNewTodo = (value) => {
 	const checkmarkCheck    = document.createElement('img')
 
 	const p                 = document.createElement('p')
+	const pSpan             = document.createElement('span')
 	const li                = document.createElement('li')
 
 	checkmarkRing.setAttribute('src', './src/svg/circle_ic.svg')
@@ -32,21 +34,27 @@ const addNewTodo = (value) => {
 
 	li.appendChild(checkmark)
 
-	p.innerText = value
-	p.classList.add('card__p', 'clickable', 'checkable')
+	pSpan.innerText = value
+	pSpan.classList.add('card__p', 'clickable', 'checkable')
+	p.appendChild(pSpan)
 	li.appendChild(p)
 
 	cardActionsArrow.setAttribute('src', './src/svg/item_actions_ic.svg')
-	cardActionsArrow.classList.add('card__actions-arrow')
+	cardActionsArrow.classList.add('card__actions-arrow', 'card__actions-arrow--hidden')
 
-	cardActionEdit.setAttribute('src', './src/img/edit_ic.png')
+	cardActionsArrow.addEventListener('mouseover', _ => {
+		cardActionsArrow.classList.add('card__actions-arrow--hover')
+		cardActionsAction.classList.remove('card__action--hidden')
+	})
+
+	cardActionEdit.setAttribute('src', './src/img/edit_ic_135x135.png')
 	cardActionEdit.classList.add('card__actions-edit', 'clickable')
-	cardActionSave.setAttribute('src', './src/img/save_ic.png')
+	cardActionSave.setAttribute('src', './src/img/save_ic_135x135.png')
 	cardActionSave.classList.add('card__actions-save','card__actions-save--hidden', 'clickable')
-	cardActionDelete.setAttribute('src', './src/img/delete_ic.png')
+	cardActionDelete.setAttribute('src', './src/img/delete_ic_135x135.png')
 	cardActionDelete.classList.add('card__actions-delete', 'card__actions-delete--hidden', 'clickable')
 
-	cardActionsAction.classList.add('card__action')
+	cardActionsAction.classList.add('card__action', 'card__action--hidden')
 	cardActionsAction.appendChild(cardActionEdit)
 	cardActionsAction.appendChild(cardActionSave)
 	cardActionsAction.appendChild(cardActionDelete)
@@ -67,12 +75,14 @@ const addNewTodo = (value) => {
 			cardActionEdit.classList.toggle('card__actions-edit--hidden')
 			todoItems[index].editable = false
 			todoValue.contentEditable = false
+			isEditingTodo = false
 		} else {
 			cardActionEdit.classList.toggle('card__actions-edit--hidden')
 			cardActionSave.classList.toggle('card__actions-save--hidden')
 			todoItems[index].editable = true
 			todoValue.contentEditable = true
 			todoValue.focus()
+			isEditingTodo = true
 		}
 
 	})
@@ -80,6 +90,14 @@ const addNewTodo = (value) => {
 	cardActions.classList.add('card__actions')
 	cardActions.appendChild(cardActionsArrow)
 	cardActions.appendChild(cardActionsAction)
+
+	cardActions.addEventListener('mouseleave', _ => {
+		const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
+		if (todoItems[index].editable) return
+		cardActionsAction.classList.add('card__action--hidden')
+		cardActionsArrow.classList.remove('card__actions-arrow--hover')
+	})
+
 	li.appendChild(cardActions)
 
 	li.classList.add('card')
@@ -96,22 +114,30 @@ const addNewTodo = (value) => {
 	}
 
 	li.addEventListener('mouseover', e => {
+		if (isEditingTodo) return
 		const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
 		if (todoItems[index].editable) return
+		// Show actions arrow
+		cardActionsArrow.classList.remove('card__actions-arrow--hidden')
+
 		// Add hover style
 		checkTarget(e).then( res => {
-			if (res) p.classList.add('card__p--hover')
+			if (res) pSpan.classList.add('card__p--hover')
 		})
 	})
 
 	li.addEventListener('mouseout', e => {
+		// Remove actions arrow
+		cardActionsArrow.classList.add('card__actions-arrow--hidden')
+
 		// Remove hover style
 		checkTarget(e).then( res => {
-			if (res) p.classList.remove('card__p--hover')
+			if (res) pSpan.classList.remove('card__p--hover')
 		})
 	})
 
 	li.addEventListener('click', e => {
+		if ( isEditingTodo) return
 		const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
 		if (todoItems[index].editable) return
 		checkTarget(e).then(success => {
@@ -119,7 +145,7 @@ const addNewTodo = (value) => {
 				// Toggle todo checked
 				checkmarkRing.classList.toggle('card__checkmark-ring--hidden')
 				checkmarkCheck.classList.toggle('card__checkmark-check--hidden')
-				p.classList.toggle('card__p--checked')
+				pSpan.classList.toggle('card__p--checked')
 				const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
 				if (!todoItems[index].checked) {
 					todoItems[index].checked = true
@@ -138,9 +164,11 @@ const addNewTodo = (value) => {
 	todoList.insertBefore(li, todoList.children[0])
 }
 
-input.addEventListener('keydown', e => {
+input.addEventListener('input', e => {
+	console.log(e)
+	console.log(e.inputType)
 
-	if (e.keyCode === 13 && input.value !== "") {
+	if (e.data === null && e.inputType !== "deleteContentBackward" && input.value !== "") {
 		if (input.value.trim(' ') !== "") {
 			console.log('adding new todo...')
 			addNewTodo(input.value)
@@ -148,4 +176,6 @@ input.addEventListener('keydown', e => {
 		input.value = ""
 	}
 
+	input.style.height = '28.8px'
+	input.style.height = `${input.scrollHeight}px`
 })
