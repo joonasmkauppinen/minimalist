@@ -1,10 +1,50 @@
-'use stict'
+'use strict'
 
 const todoItems = []
 
 const todoList = document.getElementById('list')
 const input = document.getElementById('new-list-item')
+const transitionCard = document.getElementById('transition-card')
 let   isEditingTodo = false
+
+const toggleTransitionCard = _ => {
+	transitionCard.classList.toggle('transition-card--hidden')
+	return new Promise( resolve => {
+		setTimeout( _ => {
+			resolve(true)
+		}, 100)
+	})
+}
+const setTransitionCardValue = (value) => {
+	transitionCard.children[1].innerText = value
+	return new Promise( resolve => {
+		resolve(true)
+	})
+}
+const moveTransitionCard = _ => {
+	const distance = transitionCard.clientHeight + 32
+	transitionCard.style.transform = `translateY(${distance}px)`
+	return new Promise( resolve => {
+		setTimeout( _ => {
+			resolve(true)
+		}, 300)
+	})
+}
+const resetTransitionCard = _ => {
+	transitionCard.classList.toggle('transition-card--hidden')
+	transitionCard.style.transform = 'translateY(0px)'
+}
+
+
+const shiftTodoItemsDown = _ => {
+	todoList.style.transform = "translateY(69px)"
+	todoList.classList.add('todo-items__list--no-transition')
+	setTimeout( _ => {
+		todoList.style.transform = "translateY(0px)"
+		todoList.classList.remove('todo-items__list--no-transition')
+	}, 300)
+}
+
 
 const addNewTodo = (value) => {
 	const cardActions       = document.createElement('span')
@@ -18,8 +58,8 @@ const addNewTodo = (value) => {
 	const checkmarkRing     = document.createElement('img')
 	const checkmarkCheck    = document.createElement('img')
 
-	const p                 = document.createElement('p')
-	const pSpan             = document.createElement('span')
+	const todoValue         = document.createElement('p')
+	const todoValueSpan     = document.createElement('span')
 	const li                = document.createElement('li')
 
 	checkmarkRing.setAttribute('src', './src/svg/circle_ic.svg')
@@ -34,10 +74,10 @@ const addNewTodo = (value) => {
 
 	li.appendChild(checkmark)
 
-	pSpan.innerText = value
-	pSpan.classList.add('card__p', 'clickable', 'checkable')
-	p.appendChild(pSpan)
-	li.appendChild(p)
+	todoValueSpan.innerText = value
+	todoValueSpan.classList.add('card__p', 'clickable', 'checkable')
+	todoValue.appendChild(todoValueSpan)
+	li.appendChild(todoValue)
 
 	cardActionsArrow.setAttribute('src', './src/svg/item_actions_ic.svg')
 	cardActionsArrow.classList.add('card__actions-arrow', 'card__actions-arrow--hidden')
@@ -122,7 +162,7 @@ const addNewTodo = (value) => {
 
 		// Add hover style
 		checkTarget(e).then( res => {
-			if (res) pSpan.classList.add('card__p--hover')
+			if (res) todoValueSpan.classList.add('card__p--hover')
 		})
 	})
 
@@ -132,7 +172,7 @@ const addNewTodo = (value) => {
 
 		// Remove hover style
 		checkTarget(e).then( res => {
-			if (res) pSpan.classList.remove('card__p--hover')
+			if (res) todoValueSpan.classList.remove('card__p--hover')
 		})
 	})
 
@@ -145,7 +185,7 @@ const addNewTodo = (value) => {
 				// Toggle todo checked
 				checkmarkRing.classList.toggle('card__checkmark-ring--hidden')
 				checkmarkCheck.classList.toggle('card__checkmark-check--hidden')
-				pSpan.classList.toggle('card__p--checked')
+				todoValueSpan.classList.toggle('card__p--checked')
 				const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
 				if (!todoItems[index].checked) {
 					todoItems[index].checked = true
@@ -164,18 +204,34 @@ const addNewTodo = (value) => {
 	todoList.insertBefore(li, todoList.children[0])
 }
 
-input.addEventListener('input', e => {
-	console.log(e)
-	console.log(e.inputType)
+input.addEventListener('keydown', e => {
 
-	if (e.data === null && e.inputType !== "deleteContentBackward" && input.value !== "") {
+	if (e.keyCode === 13) {
+		e.preventDefault()
+	}
+
+	if (input.value !== "" && e.keyCode === 13) {
 		if (input.value.trim(' ') !== "") {
-			console.log('adding new todo...')
-			addNewTodo(input.value)
+			const inputValue = input.value
+			//addNewTodo(input.value)
+			setTransitionCardValue(input.value)
+			.then( _ => {
+				 return toggleTransitionCard()
+			})
+			.then( _ => {
+				input.value = ""
+				shiftTodoItemsDown()
+				return moveTransitionCard()
+			})
+			.then( _ => {
+				addNewTodo(inputValue)
+				resetTransitionCard()
+			})
 		}
-		input.value = ""
+
 	}
 
 	input.style.height = '28.8px'
 	input.style.height = `${input.scrollHeight}px`
+
 })

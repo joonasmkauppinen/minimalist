@@ -1,5 +1,5 @@
 :root {
-	--color-bg: #F8F2F0;
+	--color-bg: #f2eee7;
 	--color-title: #AD9A8D;
 	--color-placeholder: #BA9F92;
 	--color-font-normal: #80624B;
@@ -47,17 +47,40 @@ body {
 }
 
 
+.transition-card {
+	z-index: 10;
+	position: absolute !important;
+	left: 0;
+	top: 0;
+	opacity: 1;
+	visibility: visible;
+	transition:
+		visibility 0ms,
+		opacity 100ms cubic-bezier(0.4, 0, 0.2, 1),
+		transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.transition-card--hidden {
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		visibility 0ms 300ms;
+}
+
+
 .card {
 	position: relative;
 	display: flex;
 	align-items: baseline;
 	width: 100%;
+	min-height: 53px;
 	color: var(--color-font-normal);
 	background-color: white;
 	border-radius: 8px;
 	padding: 12px 24px;
 	box-sizing: border-box;
 	box-shadow: 0 19px 36px -5px rgba(111, 96, 72, .09);
+	font-family: 'Roboto Slab', serfi;
+	font-size: 22px;
 }
 .card > *:nth-child(2) {
 	margin-left: 16px !important;
@@ -66,11 +89,13 @@ body {
 
 .todo-items__list {
 	margin-top: 32px;
+	transition: transform 0ms 0ms;
+}
+.todo-items__list--no-transition {
+	transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .todo-items__list > li {
 	list-style: none;
-	font-family: 'Roboto Slab', serif;
-	font-size: 22px;
 	margin: 16px 0;
 }
 
@@ -113,6 +138,7 @@ body {
 }
 
 .card__p {
+	display: inline;
 	background-image:
 		linear-gradient(
 			transparent 50%,
