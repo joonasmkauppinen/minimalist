@@ -1,2 +1,4 @@
 # minimalist
-Minimalist todo list app
+Minimalist todo list app.
+
+[see demo](https://joonasmkauppinen.github.io/minimalist/)
