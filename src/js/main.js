@@ -241,3 +241,5 @@ const calcInputHeight = _ => {
 	input.style.height = '28.8px'
 	input.style.height = `${input.scrollHeight}px`
 }
+
+calcInputHeight()
