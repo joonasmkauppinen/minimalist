@@ -177,7 +177,7 @@ const addNewTodo = (value) => {
 	})
 
 	li.addEventListener('click', e => {
-		if ( isEditingTodo) return
+		if (isEditingTodo) return
 		const index = Array.prototype.indexOf.call(todoList.childNodes, li) - 1
 		if (todoItems[index].editable) return
 		checkTarget(e).then(success => {
@@ -200,12 +200,11 @@ const addNewTodo = (value) => {
 
 	todoItems.unshift({checked: false, editable: false, value: value})
 
-	// Append new item on top of list
+	// Append new element start of ul
 	todoList.insertBefore(li, todoList.children[0])
 }
 
-input.addEventListener('keydown', e => {
-
+input.addEventListener('keypress', e => {
 	if (e.keyCode === 13) {
 		e.preventDefault()
 	}
@@ -220,6 +219,7 @@ input.addEventListener('keydown', e => {
 			})
 			.then( _ => {
 				input.value = ""
+				calcInputHeight()
 				shiftTodoItemsDown()
 				return moveTransitionCard()
 			})
@@ -230,8 +230,14 @@ input.addEventListener('keydown', e => {
 		}
 
 	}
+})
 
+// auto size input textarea
+input.addEventListener('input', _ => {
+	calcInputHeight()
+})
+
+const calcInputHeight = _ => {
 	input.style.height = '28.8px'
 	input.style.height = `${input.scrollHeight}px`
-
-})
+}
